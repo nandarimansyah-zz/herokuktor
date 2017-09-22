@@ -128,9 +128,7 @@ fun buildTransactionResponse(requestMap: Map<String, String>): String {
 }
 
 fun getTransactionResponseCode(phoneNumber: String?): String {
-    return if (phoneNumber!!.endsWith("68")) {
-        "68"
-    } else if (phoneNumber!!.endsWith("97")) {
+    return if (phoneNumber!!.endsWith("68") || phoneNumber!!.endsWith("97") || phoneNumber!!.endsWith("92")) {
         "68"
     } else if (phoneNumber!!.endsWith("99")) {
         "99"
@@ -171,6 +169,8 @@ fun buildInquiryResponse(requestMap: Map<String, String>): String {
 fun getInquiryResponseCode(phoneNumber: String?): String {
     return if (phoneNumber!!.endsWith("97")) {
         "99"
+    } else if (phoneNumber!!.endsWith("92")) {
+        "92"
     } else {
         "00"
     }
