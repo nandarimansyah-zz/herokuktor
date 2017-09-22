@@ -78,9 +78,9 @@ private fun buildResponse(requestMap: Map<String, String>): String {
 }
 
 fun buildTransactionResponse(requestMap: Map<String, String>): String {
-    val phoneNumber = requestMap["NOHP"]
-    val requestId = requestMap["REQUESTID"]
-    val product = requestMap["NOM"]
+    val phoneNumber = requestMap["NOHP"]!!.trim()
+    val requestId = requestMap["REQUESTID"]!!.trim()
+    val product = requestMap["NOM"]!!.trim()
 
     val responseCode = getTransactionResponseCode(phoneNumber)
 
@@ -140,7 +140,7 @@ fun getTransactionResponseCode(phoneNumber: String?): String {
 }
 
 fun buildInquiryResponse(requestMap: Map<String, String>): String {
-    val phoneNumber = requestMap["NOHP"]
+    val phoneNumber = requestMap["NOHP"]!!.trim()
     val responseCode = getInquiryResponseCode(phoneNumber)
 
     return """<?xml version="1.0" encoding="iso-8859-1"?>
