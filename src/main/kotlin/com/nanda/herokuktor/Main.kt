@@ -33,8 +33,20 @@ fun Application.module() {
 
             val map = requestBodyToMap(reqBody)
 
-            call.response.header("content-type", "text/plain; charset=UTF-8")
-            call.respond(buildResponse(map))
+            call.response.header("content-type", "text/xml; charset=UTF-8")
+
+            val methodName = map["methodName"]!!.trim()
+            val phoneNumber = map["NOHP"]!!.trim()
+
+            if ("topUpRequest".equals(methodName, true) && phoneNumber!!.endsWith("1234")) {
+                call.response.status(HttpStatusCode.fromValue(408)!!)
+            } else {
+                call.respond(buildResponse(methodName, map))
+            }
+
+
+
+
         }
     }
 
@@ -65,9 +77,7 @@ private fun requestBodyToMap(reqBody: String): HashMap<String, String> {
     return map
 }
 
-private fun buildResponse(requestMap: Map<String, String>): String {
-    val methodName = requestMap["methodName"]
-
+private fun buildResponse(methodName : String, requestMap: Map<String, String>): String {
     return if ("topUpInquiry".equals(methodName, true)) {
         buildInquiryResponse(requestMap)
     } else if ("topUpRequest".equals(methodName, true)) {
@@ -84,7 +94,7 @@ fun buildTransactionResponse(requestMap: Map<String, String>): String {
 
     val responseCode = getTransactionResponseCode(phoneNumber)
 
-    return """<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>
+    return """<?xml version="1.0" encoding="iso-8859-1"?>
 <methodResponse>
 	<params>
 		<param>
@@ -169,7 +179,7 @@ fun buildInquiryResponse(requestMap: Map<String, String>): String {
 fun getInquiryResponseCode(phoneNumber: String?): String {
     return if (phoneNumber!!.endsWith("97")) {
         "99"
-    } else if (phoneNumber!!.endsWith("92")) {
+    } else if (phoneNumber!!.endsWith("92") && phoneNumber!!.endsWith("1234")) {
         "92"
     } else {
         "00"
