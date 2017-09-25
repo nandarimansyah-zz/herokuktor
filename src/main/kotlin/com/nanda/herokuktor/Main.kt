@@ -179,7 +179,7 @@ fun buildInquiryResponse(requestMap: Map<String, String>): String {
 fun getInquiryResponseCode(phoneNumber: String?): String {
     return if (phoneNumber!!.endsWith("97")) {
         "99"
-    } else if (phoneNumber!!.endsWith("92") && phoneNumber!!.endsWith("1234")) {
+    } else if (phoneNumber!!.endsWith("92") || phoneNumber!!.endsWith("1234")) {
         "92"
     } else {
         "00"
