@@ -40,12 +40,10 @@ fun Application.module() {
 
             if ("topUpRequest".equals(methodName, true) && phoneNumber!!.endsWith("1234")) {
                 call.response.status(HttpStatusCode.fromValue(408)!!)
+                call.respond("")
             } else {
                 call.respond(buildResponse(methodName, map))
             }
-
-
-
 
         }
     }
