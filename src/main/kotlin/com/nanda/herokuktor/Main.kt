@@ -39,6 +39,7 @@ fun Application.module() {
             val phoneNumber = map["NOHP"]!!.trim()
 
             if ("topUpRequest".equals(methodName, true) && phoneNumber!!.endsWith("1234")) {
+                Thread.sleep(60000)
                 call.response.status(HttpStatusCode.fromValue(408)!!)
                 call.respond("")
             } else {
