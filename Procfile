@@ -1,1 +1,1 @@
-web: java -jar target/mocktrx.jar
+web: java -jar target/gemerlap.jar
