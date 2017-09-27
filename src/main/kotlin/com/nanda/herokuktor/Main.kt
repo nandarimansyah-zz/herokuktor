@@ -93,6 +93,8 @@ fun buildTransactionResponse(requestMap: Map<String, String>): String {
 
     val responseCode = getTransactionResponseCode(phoneNumber)
 
+    val message = getTransactionMessage(product, phoneNumber, responseCode)
+
     return """<?xml version="1.0" encoding="iso-8859-1"?>
 <methodResponse>
 	<params>
@@ -114,7 +116,7 @@ fun buildTransactionResponse(requestMap: Map<String, String>): String {
 					<member>
 						<name>MESSAGE</name>
 						<value>
-							<string>SN=6929445962645983875;ISI ${product} KE ${phoneNumber}, BERHASIL.SAL=4.715.663,ID=401525296,SN=6929445962645983875; TRANSAKSI LANCAR, TRIMS</string>
+							<string>$message</string>
 						</value>
 					</member>
 					<member>
@@ -136,6 +138,16 @@ fun buildTransactionResponse(requestMap: Map<String, String>): String {
 </methodResponse>"""
 }
 
+fun getTransactionMessage(product:String, phoneNumber: String, responseCode: String): String {
+    return if (responseCode == "00") {
+        "SN=6929445962645983875;ISI ${product} KE ${phoneNumber}, BERHASIL.SAL=4.715.663,ID=401525296,SN=6929445962645983875; TRANSAKSI LANCAR, TRIMS"
+    } else if (responseCode == "68") {
+        "ISI ${product} KE ${phoneNumber}, sedang di proses."
+    } else {
+        "Response code dari server $responseCode"
+    }
+}
+
 fun getTransactionResponseCode(phoneNumber: String?): String {
     return if (phoneNumber!!.endsWith("68") || phoneNumber!!.endsWith("97") || phoneNumber!!.endsWith("92")) {
         "68"
@@ -149,6 +161,8 @@ fun getTransactionResponseCode(phoneNumber: String?): String {
 fun buildInquiryResponse(requestMap: Map<String, String>): String {
     val phoneNumber = requestMap["NOHP"]!!.trim()
     val responseCode = getInquiryResponseCode(phoneNumber)
+
+    val message = getInquiryMessage(phoneNumber, responseCode)
 
     return """<?xml version="1.0" encoding="iso-8859-1"?>
 <methodResponse>
@@ -173,6 +187,16 @@ fun buildInquiryResponse(requestMap: Map<String, String>): String {
 		</param>
 	</params>
 </methodResponse>"""
+}
+
+fun getInquiryMessage(phoneNumber: String, responseCode: String): String {
+    return if (responseCode == "00") {
+        "ISI ANYPRODUCT KE ${phoneNumber}, BERHASIL.SAL=5.909.263,ID=401490229,SN=6929445962645983875;"
+    } else if (responseCode == "68") {
+        "ISI ANYPRODUCT KE ${phoneNumber}, sedang di proses."
+    } else {
+        "Response code dari server $responseCode"
+    }
 }
 
 fun getInquiryResponseCode(phoneNumber: String?): String {
